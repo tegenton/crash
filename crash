@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# crash - CaR Accident SHell
+# Takes your input, stores it in a tmp file, and runs it in a random shell
+
+runCommand() {
+	read line
+	[ "$line" = "exit" ] && return 1
+	tmp=$(mktemp)
+	echo "$line" > $tmp
+	shell=$(grep / /etc/shells | shuf | head -n1)
+	$shell $tmp
+	rm $tmp
+}
+
+printf "Welcome to crash, the CaR Accident SHell\n>"
+while runCommand; do printf ">"; done;
